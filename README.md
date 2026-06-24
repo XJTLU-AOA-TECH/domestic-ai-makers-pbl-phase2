@@ -99,7 +99,6 @@ npx skills run cad-viewer --file ./test.step
 |------|------|
 | AI Agent | Claude Code / OpenAI Codex |
 | Skills | `@anthropic-ai/skills` + `earthtojake/text-to-cad` |
-| CAD 引擎 | Python + OpenCASCADE |
 | 测量验证 | FreeCAD |
 | 切片软件 | Bambu Studio（基于 PrusaSlicer） |
 | 制造终端 | Bambu Lab / FDM 打印机 |
