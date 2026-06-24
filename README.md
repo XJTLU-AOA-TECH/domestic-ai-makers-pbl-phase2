@@ -1,112 +1,116 @@
-# Text-to-CAD 全链路实战
+# Text-to-CAD 实战：从 Prompt 到 Loop Engineering
 
-> **Text-to-CAD Hands-On Workshop**  
-> AI-PBL 课程 · 两天密集版 · 从自然语言到制造到机器人  
-> 基于 [earthtojake/text-to-cad](https://github.com/earthtojake/text-to-cad) 开源项目
+> 用自然语言生成工程级 CAD 模型，用 Loop Engineering 让 AI 自主迭代到合格，最后用 Bambu Studio 切片直送 3D 打印机。
+> 
+
+---
 
 ## 这是什么？
 
-两天，从零开始走通 **Text-to-CAD 工程化的完整链路**。不是看论文，不是调 Demo——你自己动手生成零件、切片打印、控制机器人。
-
-| 天 | 主题 | 你要做什么 |
-|---|---|---|
-| **Day 1 上午** | 环境搭建与原理 | 装环境、跑通第一个零件、理解 Text-to-CAD 技术路线 |
-| **Day 1 下午** | Prompt 工程与 Benchmark | 写精确 Prompt、复现 10 个官方 Benchmark、建立模板库 |
-| **Day 2 上午** | 制造链路 | STEP→STL→G-code→Bambu Lab 打印控制；DXF 激光切割 |
-| **Day 2 下午** | 机器人与综合项目 | 生成 URDF/SDF 机械臂、Implicit CAD 实验、完成夹具系统设计 |
-
-## 前置要求
-
-- Node.js 18+ & Python 3.10+
-- 一个 LLM API Key（OpenAI / Anthropic / 本地 Ollama）
-- （Day 2 上午）Bambu Lab 3D 打印机 或 Bambu Studio 用于仿真切片
-- （Day 2 下午）FreeCAD 用于验证尺寸；Gazebo（可选）用于机器人仿真
-
-## 仓库结构
+本课程教学生用 AI 完成 "设计→制造" 完整链路：
 
 ```
-text2cad-workshop/
-├── day1-ai-cad-fundamentals/           ← Day 1 上午：环境+原理+第一个零件
-│   ├── lab01-environment/                # 环境检查与安装
-│   ├── lab02-first-cad/                  # 生成第一个零件（20mm立方体）
-│   ├── lab03-cad-viewer/                 # 本地浏览器预览
-│   └── lab04-project-overview/           # 项目架构与技术路线
-│
-├── day1-prompt-engineering/              ← Day 1 下午：Prompt工程+Benchmark
-│   ├── lab05-prompt-basics/              # Prompt 最佳实践
-│   ├── lab06-benchmark-01-03/            # 矩形块/法兰盘/L支架
-│   ├── lab07-benchmark-04-07/            # 阶梯轴/电子外壳/航空支架/发动机
-│   ├── lab08-benchmark-08-10/            # 叶轮/螺旋楼梯/行星齿轮
-│   ├── lab09-prompt-templates/           # 四大类模板库（板/轴/壳/支架）
-│   └── lab10-evaluation/                 # 尺寸验证与误差分析
-│
-├── day2-manufacturing-integration/         ← Day 2 上午：制造链路
-│   ├── lab11-step-to-stl/                # 格式转换与工艺检查
-│   ├── lab12-dxf-laser/                  # 2D工程图与激光切割
-│   ├── lab13-gcode-slicing/              # G-code 切片与参数调优
-│   ├── lab14-bambu-control/              # Bambu Lab 局域网打印控制
-│   └── lab15-manufacturing-log/          # 制造参数模板库
-│
-├── day2-robotics-advanced/               ← Day 2 下午：机器人+高级主题
-│   ├── lab16-urdf-generation/            # 机械臂 URDF 生成
-│   ├── lab17-sdf-simulation/             # Gazebo 仿真世界搭建
-│   ├── lab18-implicit-cad/               # 隐式建模（实验性）
-│   ├── lab19-agent-orchestration/        # 多技能 Agent 编排
-│   └── lab20-final-project/              # 综合大作业：桌面夹具系统
-│
-├── resources/                            # 公共资源
-│   ├── api-configs/                      # LLM API 配置模板
-│   ├── print-profiles/                   # Bambu Lab 打印参数模板
-│   ├── cad-standards/                    # 尺寸公差与制造规范
-│   └── troubleshooting.md                # 故障排除手册
-│
-├── slides/                               # 课程课件
-│   └── Text2CAD_Workshop_Detailed.pptx
-│
-├── README.md
-├── syllabus.md
-├── setup.md
-├── requirements.txt
-└── .gitignore
+文本描述 → Text-to-CAD → STEP → STL → Bambu Studio 切片 → G-code → 3D 打印
 ```
+
+核心不是 "让 AI 画图"，而是 **Loop Engineering**——你设定验收标准（如"尺寸误差 ≤ 2%"），AI 自己循环生成→测量→修正→直到达标。
+
+---
+
+## 上午：AI 生成 CAD
+
+### 课前科普
+- 3D 建模：STEP（参数化/可编辑） vs STL（三角网格/只打印）
+- Text-to-CAD：自然语言 → 工程文件
+- Skills：给 Claude Code 装的 CAD 工具箱
+- Loop Engineering：从 "发球机"（手动 Prompt）进化为 "裁判"（设定标准让 AI 自己跑）
+
+### 5 个 Benchmark 零件
+
+| # | 零件 | 方式 | 考验 |
+|---|------|------|------|
+| 01 | 矩形校准块（四孔） | 手动 Prompt | 尺寸精度 |
+| 02 | 圆形法兰盘（螺栓孔） | 手动 Prompt | 圆周均布推理 |
+| 03 | L 型支架（加强筋） | 手动 Prompt | 多特征空间关系 |
+| 04 | 阶梯轴（键槽） | **Loop Engineering** | 尺寸自动迭代 |
+| 05 | 电子外壳（支撑柱） | **Loop Engineering** | 结构完整性 |
+
+前 3 个体验手动修正的痛点，后 2 个感受 Loop 的自动化。
+
+---
+
+## 下午：制造落地
+
+### 切片科普
+- 切片 = 把 3D 模型翻译成 G-code（打印机只懂 "走到哪、挤多少料"）
+- Bambu Studio：导入 → 摆放 → 修复 → 参数 → 切片 → 预览 → 导出
+
+### 制造约束（设计时就要考虑）
+- 壁厚 ≥ 1.2mm（0.4mm nozzle × 3 层）
+- 悬空角度 ≤ 45°，否则需支撑
+- 孔径 ≥ 2mm（太小打不圆）
+- 特征高度是层厚的整数倍
+- 支撑不能封死内部空腔
+- 最大平面朝下
+
+---
 
 ## 快速开始
 
-```bash
-# 1. 克隆仓库
-git clone https://github.com/yourname/text2cad-workshop.git
-cd text2cad-workshop
+### 方式 A：Claude Code 一键部署（推荐）
 
-# 2. 按 setup.md 完成环境安装
-# 3. 每天进入对应文件夹，先读 README.md
-# 4. 按里面的步骤操作——可以不跑参考代码，但交付文件名和格式必须一致
-# 5. 每一天的产物交给下一天，形成完整链路
+打开 Claude Code，直接说：
+
+```
+帮我本地部署 earthtojake/text-to-cad，并用 Loop Engineering 方式运行。
+要求：
+1. 自动检查并安装 Node.js、npm、@anthropic-ai/skills
+2. 安装 text-to-cad 插件
+3. 写一个 loop_cad.py，实现：生成→测量→修正→直到达标（误差 ≤ 2%，最多 5 轮）
+4. 最后跑一个测试验证整个 loop 是否通
 ```
 
-## 课程交付物
+### 方式 B：手动安装
 
-| 阶段 | 交付物 | 验收标准 |
-|---|---|---|
-| Day 1 上午 | `cube.step` + `cube.stl` + 环境截图 | 能生成零件并在浏览器预览 |
-| Day 1 下午 | `benchmark_report.md` + `prompt_templates/` | 完成 ≥3 个 Benchmark，尺寸误差 ≤ 2% |
-| Day 2 上午 | `gcode_files/` + `dxf_files/` + `manufacturing_log.md` | 切片成功，参数合理，dry-run 通过 |
-| Day 2 下午 | `urdf_robot/` + `final_project/` + 演示视频 | 机械臂可加载，夹具系统完整，视频 5 分钟 |
+```bash
+# 1. 确认 Node.js 18+
+node -v
 
-## 核心原则
+# 2. 安装 Skills CLI 和 Text-to-CAD
+npm install -g @anthropic-ai/skills
+npx skills install earthtojake/text-to-cad
 
-1. **Mesh ≠ CAD** — 能打印不代表能制造，参数化模型才是工程语言
-2. **Prompt 是设计意图** — 描述越精确，模型越准确；模糊描述 = 废品
-3. **制造约束前置** — 设计时就要考虑壁厚、悬垂、支撑、材料收缩
-4. **链路必须闭环** — 文本 → CAD → 切片 → 打印/仿真，缺一环就是 Demo
+# 3. 验证
+npx skills list | grep cad
 
-## 资源链接
+# 4. 生成第一个零件
+npx skills run cad --prompt "Create a 20 mm cube" --output ./test.step
 
-- [earthtojake/text-to-cad](https://github.com/earthtojake/text-to-cad) — 本课程核心项目
-- [Text2CAD Paper](https://sadilkhan.github.io/text2cad-project/) — NeurIPS 2024
-- [Bambu Studio](https://bambulab.com/en/download/studio) — 切片引擎
-- [FreeCAD](https://www.freecad.org/) — STEP 验证与编辑
-- [Gazebo](https://gazebosim.org/) — 机器人仿真
+# 5. 浏览器预览
+npx skills run cad-viewer --file ./test.step
+```
 
-## License
+---
+
+## 技术栈
+
+| 层级 | 工具 |
+|------|------|
+| AI Agent | Claude Code / OpenAI Codex |
+| Skills | `@anthropic-ai/skills` + `earthtojake/text-to-cad` |
+| 测量验证 | FreeCAD |
+| 切片软件 | Bambu Studio（基于 PrusaSlicer） |
+| 制造终端 | Bambu Lab / FDM 打印机 |
+
+---
+
+## 资源
+
+- [text-to-cad 源码](https://github.com/earthtojake/text-to-cad)
+- [Text2CAD 论文](https://sadilkhan.github.io/text2cad-project/)（NeurIPS 2024）
+- [Bambu Studio 下载](https://bambulab.com/en/download/studio)
+- [FreeCAD](https://www.freecad.org/)
+
+---
 
 MIT © XJTLU AOA TECH
