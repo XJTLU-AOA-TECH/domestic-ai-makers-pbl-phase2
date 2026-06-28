@@ -1,92 +1,57 @@
-# 国产 AI 造物者 · PBL 实战课程
+# domestic-ai-makers-pbl-phase2
 
-> **一句话：教学生用 AI 把想法变成能摸得着、跑得动的实物。**
-
----
-
-## 这是一门什么课？
-
-这不是传统的"学软件操作"课，也不是纯理论的 AI 课。
-
-**这是一门"AI + 工程制造"的实战课。** 学生只需要用自然语言描述需求，AI 就能帮你完成建模、仿真、控制代码生成，最终产出可打印、可运行的实体作品——从一块 CAD 零件，到一台会抓橘子的机械臂，再到一个 CNC 加工出的金属件。
-
-核心训练的不是"记住哪个按钮在哪"，而是**建立一条从"想法"到"实物"的完整思维链路**，并掌握让 AI 自主迭代的方法论。
+本仓库为西交利物浦大学 AOA Lab 的 PBL 课程资料，围绕 AI 辅助工程设计与制造展开，涵盖从文本生成 CAD 模型到机器人仿真与操控的多个环节。
 
 ---
 
-## 课程解决的核心问题
+## 课程目标
 
-传统工程教育中，学生常卡在三个断层：
-
-1. **设计断层** —— 有想法但不会画 3D，学了软件又只会跟着教程做
-2. **制造断层** —— 模型有了却不知道能不能打、怎么打、打出来合不合格
-3. **智能断层** —— 硬件做好了不会写控制逻辑，AI 模型训练了落不了地
-
-本课程用 **AI 工具链 + Loop Engineering 方法论** 打通这三个断层，让学生专注于"定义问题"和"验收标准"，把执行交给 AI 自主迭代。
-
----
-
-## 三大课程特色
-
-### 1. Loop Engineering：从"手动调 Prompt"到"设定标准让 AI 自己跑"
-
-课程核心方法论。学生不再反复手动修改 Prompt，而是学会设定验收指标（如"尺寸误差 ≤ 2%"），让 AI 自动循环：生成 → 测量 → 修正 → 直到达标。这是从"操作工"到"工程师"的思维跃迁。
-
-### 2. 全链路贯通：设计 → 仿真 → 制造 → 操控
-
-不是零散学工具，而是围绕真实项目打通完整链路。例如：
-- 上午用 Text-to-CAD 生成零件 → 下午用 Bambu Studio 切片 → 当晚 3D 打印出实物
-- 先用 Isaac Lab 仿真机械臂抓取 → 再部署到真实 SO101 机械臂上远程操控
-
-### 3. 真实硬件支撑：450㎡ AI 工坊 + 算力集群
-
-课程依托 **AOA Lab**（AI Workshop + AI 电子实验室），学生不是在虚拟环境里"假装做"，而是在真实工位上操作：半人型机器人、灵巧手、桌面五轴 CNC、AGV 物流小车、智能仓储系统、RTX 4090 算力服务器——**想法在这里直接落地**。
+通过自然语言与 AI 工具链的配合，完成以下任务：
+- 将文本描述转换为可编辑的 CAD 模型（STEP）及可打印的网格模型（STL）
+- 对 AI 生成的模型进行自动测量与迭代修正（Loop Engineering）
+- 使用切片软件生成 G-code 并输出至 3D 打印机
+- 在 NVIDIA Isaac Lab 中对机器人动作进行物理仿真
+- 使用 LeRobot 框架训练机械臂的端到端控制策略
+- 操作桌面五轴 CNC 进行零件加工
+- 使用 Blender 结合 AI 工具生成与修改 3D 资产
 
 ---
 
-## 学完这门课，你能做什么？
+## 内容模块
 
-- 用一句话描述需求，AI 帮你生成工程级 CAD 模型并自动优化到合格
-- 判断一个 3D 模型能不能打印、怎么打最省料、怎么设计支撑
-- 在 NVIDIA Isaac Lab 里仿真机器人动作，再部署到真实机械臂上
-- 训练机械臂端到端策略（Diffusion Policy），让机器人学会"看-想-做"
-- 操作桌面五轴 CNC 加工金属/工程塑料零件
-- 用 Blender + AI 生成 3D 资产，手动精修后用于游戏/影视/3D 打印
-
-**最终产出：一个完整的、可演示的、有实际功能的 AI 硬件作品。**
-
----
-
-## 适合谁学？
-
-- **工科学生**：机械、电子、自动化、计算机，想快速把 AI 落地到硬件
-- **交叉学科探索者**：对"AI + 制造"感兴趣，想建立全链路认知
-- **竞赛/项目驱动型学生**：需要快速产出实体作品参加 RoboMaster、机械创新设计大赛等
-- **教师/实验室负责人**：想搭建一套"AI 工程教育"课程体系
-
-**不需要你是建模高手、代码大神或硬件专家。你需要的是：有想法，敢动手。**
+| 模块 | 内容 | 主要产出 |
+|:---|:---|:---|
+| Text-to-CAD | 自然语言生成参数化 CAD 模型 | STEP / STL 文件 |
+| Loop Engineering | 设定验收标准，由 AI 自动迭代生成-测量-修正 | 达标后的 CAD 模型 |
+| 3D 打印制造 | Bambu Studio 切片、工艺参数设置、G-code 输出 | 可打印的 G-code 文件 |
+| 机器人仿真 | Isaac Lab 环境搭建、SO101 机械臂远程操控 | 仿真与实机操控代码 |
+| 机器人学习 | LeRobot 框架、Diffusion Policy 训练与部署 | 训练策略与实机运行 |
+| 桌面 CNC | Xhorse 五轴机床操作、刀具路径与加工参数 | 加工完成的零件 |
+| Blender + AI | Blender MCP 配置、AI 生成 3D 资产与手动精修 | 3D 模型文件 |
 
 ---
 
-## 技术生态
+## 使用的工具
 
-课程基于当前最前沿的开源 AI 工程工具链构建，所有工具均可免费获取：
+- **Claude Code** / OpenAI Codex：AI Agent 交互环境
+- **@anthropic-ai/skills** + **earthtojake/text-to-cad**：自然语言生成 CAD
+- **FreeCAD**：模型测量与验证
+- **Bambu Studio**（基于 PrusaSlicer）：切片与 G-code 生成
+- **NVIDIA Isaac Lab**：机器人物理仿真
+- **Hugging Face LeRobot**：开源机器人学习框架
+- **Xhorse / Xmachine**：桌面五轴 CNC 机床
+- **Blender** + **Blender MCP**：3D 内容创作与 AI 联动
 
-- **AI 设计**：Claude Code + Text-to-CAD（自然语言生成工程级 CAD）
-- **AI 仿真**：NVIDIA Isaac Lab（物理级机器人仿真）
-- **AI 操控**：Hugging Face LeRobot（开源机器人学习框架）
-- **AI 制造**：Bambu Studio（切片）/ Xhorse（桌面五轴 CNC）
-- **AI 创作**：Blender + MCP（AI 驱动 3D 工作流）
 
 ---
 
-## 关于 AOA Lab
+## 相关资源
 
-本课程由 **西交利物浦大学 AOA Lab** 设计与实施。
-
-AOA Lab 包含 **AI Workshop**（约 450㎡，涵盖半人型机器人、灵巧手、桌面 CNC、AGV、智能仓储、WMS/MES 系统）和 **AI 电子实验室**（树莓派、ESP32、开发板、焊接与测试设备），配备 **RTX 4090 算力服务器集群**，支持学生将 AI 想法直接落地为实体作品。
-
-实验室同时支撑教育部教改项目，指导学生参加 RoboMaster、机械创新设计大赛等学科竞赛，已获多项国一、国二奖项。
+- [text-to-cad](https://github.com/earthtojake/text-to-cad)
+- [Isaac Lab](https://github.com/isaac-sim/IsaacLab)
+- [LeRobot](https://github.com/huggingface/lerobot)
+- [Bambu Studio](https://bambulab.com/en-us/download/studio)
+- [FreeCAD](https://www.freecad.org)
 
 ---
 
