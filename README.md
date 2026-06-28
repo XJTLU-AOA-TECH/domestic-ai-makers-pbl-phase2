@@ -1,116 +1,58 @@
-# Text-to-CAD 实战：从 Prompt 到 Loop Engineering
+# domestic-ai-makers-pbl-phase2
 
-> 用自然语言生成工程级 CAD 模型，用 Loop Engineering 让 AI 自主迭代到合格，最后用 Bambu Studio 切片直送 3D 打印机。
-> 
-
----
-
-## 这是什么？
-
-本课程教学生用 AI 完成 "设计→制造" 完整链路：
-
-```
-文本描述 → Text-to-CAD → STEP → STL → Bambu Studio 切片 → G-code → 3D 打印
-```
-
-核心不是 "让 AI 画图"，而是 **Loop Engineering**——你设定验收标准（如"尺寸误差 ≤ 2%"），AI 自己循环生成→测量→修正→直到达标。
+本仓库为西交利物浦大学 AOA Lab 的 PBL 课程资料，围绕 AI 辅助工程设计与制造展开，涵盖从文本生成 CAD 模型到机器人仿真与操控的多个环节。
 
 ---
 
-## 上午：AI 生成 CAD
+## 课程目标
 
-### 课前科普
-- 3D 建模：STEP（参数化/可编辑） vs STL（三角网格/只打印）
-- Text-to-CAD：自然语言 → 工程文件
-- Skills：给 Claude Code 装的 CAD 工具箱
-- Loop Engineering：从 "发球机"（手动 Prompt）进化为 "裁判"（设定标准让 AI 自己跑）
-
-### 5 个 Benchmark 零件
-
-| # | 零件 | 方式 | 考验 |
-|---|------|------|------|
-| 01 | 矩形校准块（四孔） | 手动 Prompt | 尺寸精度 |
-| 02 | 圆形法兰盘（螺栓孔） | 手动 Prompt | 圆周均布推理 |
-| 03 | L 型支架（加强筋） | 手动 Prompt | 多特征空间关系 |
-| 04 | 阶梯轴（键槽） | **Loop Engineering** | 尺寸自动迭代 |
-| 05 | 电子外壳（支撑柱） | **Loop Engineering** | 结构完整性 |
-
-前 3 个体验手动修正的痛点，后 2 个感受 Loop 的自动化。
+通过自然语言与 AI 工具链的配合，完成以下任务：
+- 将文本描述转换为可编辑的 CAD 模型（STEP）及可打印的网格模型（STL）
+- 对 AI 生成的模型进行自动测量与迭代修正（Loop Engineering）
+- 使用切片软件生成 G-code 并输出至 3D 打印机
+- 在 NVIDIA Isaac Lab 中对机器人动作进行物理仿真
+- 使用 LeRobot 框架训练机械臂的端到端控制策略
+- 操作桌面五轴 CNC 进行零件加工
+- 使用 Blender 结合 AI 工具生成与修改 3D 资产
 
 ---
 
-## 下午：制造落地
+## 内容模块
 
-### 切片科普
-- 切片 = 把 3D 模型翻译成 G-code（打印机只懂 "走到哪、挤多少料"）
-- Bambu Studio：导入 → 摆放 → 修复 → 参数 → 切片 → 预览 → 导出
-
-### 制造约束（设计时就要考虑）
-- 壁厚 ≥ 1.2mm（0.4mm nozzle × 3 层）
-- 悬空角度 ≤ 45°，否则需支撑
-- 孔径 ≥ 2mm（太小打不圆）
-- 特征高度是层厚的整数倍
-- 支撑不能封死内部空腔
-- 最大平面朝下
+| 模块 | 内容 | 主要产出 |
+|:---|:---|:---|
+| Text-to-CAD | 自然语言生成参数化 CAD 模型 | STEP / STL 文件 |
+| Loop Engineering | 设定验收标准，由 AI 自动迭代生成-测量-修正 | 达标后的 CAD 模型 |
+| 3D 打印制造 | Bambu Studio 切片、工艺参数设置、G-code 输出 | 可打印的 G-code 文件 |
+| 机器人仿真 | Isaac Lab 环境搭建、SO101 机械臂远程操控 | 仿真与实机操控代码 |
+| 机器人学习 | LeRobot 框架、Diffusion Policy 训练与部署 | 训练策略与实机运行 |
+| 桌面 CNC | Xhorse 五轴机床操作、刀具路径与加工参数 | 加工完成的零件 |
+| Blender + AI | Blender MCP 配置、AI 生成 3D 资产与手动精修 | 3D 模型文件 |
 
 ---
 
-## 快速开始
+## 使用的工具
 
-### 方式 A：Claude Code 一键部署（推荐）
+- **Claude Code** / OpenAI Codex：AI Agent 交互环境
+- **@anthropic-ai/skills** + **earthtojake/text-to-cad**：自然语言生成 CAD
+- **FreeCAD**：模型测量与验证
+- **Bambu Studio**（基于 PrusaSlicer）：切片与 G-code 生成
+- **NVIDIA Isaac Lab**：机器人物理仿真
+- **Hugging Face LeRobot**：开源机器人学习框架
+- **Xhorse / Xmachine**：桌面五轴 CNC 机床
+- **Blender** + **Blender MCP**：3D 内容创作与 AI 联动
 
-打开 Claude Code，直接说：
-
-```
-帮我本地部署 earthtojake/text-to-cad，并用 Loop Engineering 方式运行。
-要求：
-1. 自动检查并安装 Node.js、npm、@anthropic-ai/skills
-2. 安装 text-to-cad 插件
-3. 写一个 loop_cad.py，实现：生成→测量→修正→直到达标（误差 ≤ 2%，最多 5 轮）
-4. 最后跑一个测试验证整个 loop 是否通
-```
-
-### 方式 B：手动安装
-
-```bash
-# 1. 确认 Node.js 18+
-node -v
-
-# 2. 安装 Skills CLI 和 Text-to-CAD
-npm install -g @anthropic-ai/skills
-npx skills install earthtojake/text-to-cad
-
-# 3. 验证
-npx skills list | grep cad
-
-# 4. 生成第一个零件
-npx skills run cad --prompt "Create a 20 mm cube" --output ./test.step
-
-# 5. 浏览器预览
-npx skills run cad-viewer --file ./test.step
-```
 
 ---
 
-## 技术栈
+## 相关资源
 
-| 层级 | 工具 |
-|------|------|
-| AI Agent | Claude Code / OpenAI Codex |
-| Skills | `@anthropic-ai/skills` + `earthtojake/text-to-cad` |
-| 测量验证 | FreeCAD |
-| 切片软件 | Bambu Studio（基于 PrusaSlicer） |
-| 制造终端 | Bambu Lab / FDM 打印机 |
+- [text-to-cad](https://github.com/earthtojake/text-to-cad)
+- [Isaac Lab](https://github.com/isaac-sim/IsaacLab)
+- [LeRobot](https://github.com/huggingface/lerobot)
+- [Bambu Studio](https://bambulab.com/en-us/download/studio)
+- [FreeCAD](https://www.freecad.org)
 
 ---
 
-## 资源
-
-- [text-to-cad 源码](https://github.com/earthtojake/text-to-cad)
-- [Text2CAD 论文](https://sadilkhan.github.io/text2cad-project/)（NeurIPS 2024）
-- [Bambu Studio 下载](https://bambulab.com/en/download/studio)
-- [FreeCAD](https://www.freecad.org/)
-
----
-
-MIT © XJTLU AOA TECH
+MIT © XJTLU AOA Lab
